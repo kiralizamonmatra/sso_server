@@ -1,0 +1,14 @@
+package com.kiraliza.spring.authenticaion.sso_server.service;
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+public class AuthUserDetailsService implements UserDetailsService
+{
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
+    {
+        return null;
+    }
+}
