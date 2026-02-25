@@ -25,15 +25,15 @@ public class OAuth2Authorization
     private String authorizedScopes;
 
     @Lob
-    @Column(name = "attributes")
+    @Column(name = "attributes", columnDefinition = "BLOB")
     private byte[] attributes;
 
     @Lob
-    @Column(name = "state")
+    @Column(name = "state", columnDefinition = "BLOB")
     private byte[] state;
 
     @Lob
-    @Column(name = "authorization_code_value")
+    @Column(name = "authorization_code_value", columnDefinition = "BLOB")
     private byte[] authorizationCodeValue;
 
     @Column(name = "authorization_code_issued_at")
@@ -43,11 +43,11 @@ public class OAuth2Authorization
     private Instant authorizationCodeExpiresAt;
 
     @Lob
-    @Column(name = "authorization_code_metadata")
+    @Column(name = "authorization_code_metadata", columnDefinition = "BLOB")
     private byte[] authorizationCodeMetadata;
 
     @Lob
-    @Column(name = "access_token_value")
+    @Column(name = "access_token_value", columnDefinition = "BLOB")
     private byte[] accessTokenValue;
 
     @Column(name = "access_token_issued_at")
@@ -57,7 +57,7 @@ public class OAuth2Authorization
     private Instant accessTokenExpiresAt;
 
     @Lob
-    @Column(name = "access_token_metadata")
+    @Column(name = "access_token_metadata", columnDefinition = "BLOB")
     private byte[] accessTokenMetadata;
 
     @Column(name = "access_token_type", length = 100)
@@ -67,7 +67,7 @@ public class OAuth2Authorization
     private String accessTokenScopes;
 
     @Lob
-    @Column(name = "oidc_id_token_value")
+    @Column(name = "oidc_id_token_value", columnDefinition = "BLOB")
     private byte[] oidcIdTokenValue;
 
     @Column(name = "oidc_id_token_issued_at")
@@ -77,11 +77,11 @@ public class OAuth2Authorization
     private Instant oidcIdTokenExpiresAt;
 
     @Lob
-    @Column(name = "oidc_id_token_metadata")
+    @Column(name = "oidc_id_token_metadata", columnDefinition = "BLOB")
     private byte[] oidcIdTokenMetadata;
 
     @Lob
-    @Column(name = "refresh_token_value")
+    @Column(name = "refresh_token_value", columnDefinition = "BLOB")
     private byte[] refreshTokenValue;
 
     @Column(name = "refresh_token_issued_at")
@@ -91,11 +91,11 @@ public class OAuth2Authorization
     private Instant refreshTokenExpiresAt;
 
     @Lob
-    @Column(name = "refresh_token_metadata")
+    @Column(name = "refresh_token_metadata", columnDefinition = "BLOB")
     private byte[] refreshTokenMetadata;
 
     @Lob
-    @Column(name = "id_token_value")
+    @Column(name = "id_token_value", columnDefinition = "BLOB")
     private byte[] idTokenValue;
 
     @Column(name = "id_token_issued_at")
@@ -105,11 +105,11 @@ public class OAuth2Authorization
     private Instant idTokenExpiresAt;
 
     @Lob
-    @Column(name = "id_token_metadata")
+    @Column(name = "id_token_metadata", columnDefinition = "BLOB")
     private byte[] idTokenMetadata;
 
     @Lob
-    @Column(name = "user_code_value")
+    @Column(name = "user_code_value", columnDefinition = "BLOB")
     private byte[] userCodeValue;
 
     @Column(name = "user_code_issued_at")
@@ -119,11 +119,11 @@ public class OAuth2Authorization
     private Instant userCodeExpiresAt;
 
     @Lob
-    @Column(name = "user_code_metadata")
+    @Column(name = "user_code_metadata", columnDefinition = "BLOB")
     private byte[] userCodeMetadata;
 
     @Lob
-    @Column(name = "device_code_value")
+    @Column(name = "device_code_value", columnDefinition = "BLOB")
     private byte[] deviceCodeValue;
 
     @Column(name = "device_code_issued_at")
@@ -133,7 +133,7 @@ public class OAuth2Authorization
     private Instant deviceCodeExpiresAt;
 
     @Lob
-    @Column(name = "device_code_metadata")
+    @Column(name = "device_code_metadata", columnDefinition = "BLOB")
     private byte[] deviceCodeMetadata;
 
     public String getId()

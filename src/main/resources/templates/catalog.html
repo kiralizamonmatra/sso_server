@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Clothes Catalog</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+<div class="w-full bg-white p-8 rounded shadow">
+    <h2 class="text-2xl font-bold mb-6 text-center">Clothes Catalog</h2>
+
+    <div class="max-w-4xl mx-auto bg-white shadow rounded-lg p-4">
+        <table class="w-full min-w-max table-auto border-collapse border border-gray-200">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="border border-gray-300 px-4 py-2 text-left">ID</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Name</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Description</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="product, iStat : ${productPage.content}" class="hover:bg-gray-50">
+                    <td th:text="${product.id}" class="border border-gray-300 px-4 py-2"></td>
+                    <td th:text="${product.name}" class="border border-gray-300 px-4 py-2"></td>
+                    <td th:text="${product.description}" class="border border-gray-300 px-4 py-2"></td>
+                    <td th:text="${product.type.name}" class="border border-gray-300 px-4 py-2"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="mt-4 flex justify-center space-x-2">
+            <div th:if="${productPage.totalPages > 0}" class="px-3 py-1 rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-100" th:each="pageNumber : ${pageNumbers}">
+                <a th:href="@{/${@routes.CATALOG_HOME}(size=${productPage.size}, page=${pageNumber})}"
+                   th:text=${pageNumber}
+                   th:class="${pageNumber==productPage.number + 1} ? bg-gray-100"></a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
