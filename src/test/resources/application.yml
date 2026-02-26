@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: sso_server
+  config:
+    import:
+      - database.yml
+      - authorization.yml
+      - redis.yml
+
+server:
+  port: 8843
+
+
+logging:
+  level:
+    root: debug
+    org:
+      springframework:
+        security: debug
+        data:
+          mongodb: debug
+        web: debug
+    com:
+      kiraliza:
+        spring: trace
+  file:
+    name: ./logs/test.log

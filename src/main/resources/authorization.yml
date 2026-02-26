@@ -1,0 +1,13 @@
+auth:
+  server:
+    default:
+      username: admin
+      password: admin
+    issuer: http://localhost:8843
+    token-type: jwt # jwt or opaque
+
+spring:
+  security:
+    oauth2:
+      authorizationserver:
+        issuer-url: http://localhost:8843

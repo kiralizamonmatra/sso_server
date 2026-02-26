@@ -2,47 +2,39 @@ package com.kiraliza.spring.authenticaion.sso_server;
 
 import com.kiraliza.spring.authenticaion.sso_server.model.PersonName;
 import com.kiraliza.spring.authenticaion.sso_server.model.User;
-import com.kiraliza.spring.authenticaion.sso_server.repository.UserRepository;
+import com.kiraliza.spring.authenticaion.sso_server.service.RegisteredClientService;
+import com.kiraliza.spring.authenticaion.sso_server.service.UserService;
 import com.kiraliza.spring.authenticaion.sso_server.type.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
+import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 @Component
+@Profile("test")
 public class ApplicationSeed implements CommandLineRunner
 {
-    @Value("${auth.server.repository.client.name}")
-    private String clientName;
-
-    @Value("${auth.server.repository.client.id}")
-    private String clientId;
-
-    @Value("${auth.server.repository.client.secret}")
-    private String clientSecret;
-
-    @Value("${auth.server.repository.redirect.uri}")
-    private String redirectUri;
+    @Autowired
+    private RegisteredClientService registeredClientService;
 
     @Autowired
-    private RegisteredClientRepository clientRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -51,34 +43,129 @@ public class ApplicationSeed implements CommandLineRunner
     @Transactional
     public void run(String... args)
     {
-        RegisteredClient existClient = clientRepository.findByClientId(clientId);
-        if (existClient == null)
+        if (!registeredClientService.isExists("test-jwt-client"))
         {
             RegisteredClient client = RegisteredClient
                 .withId(UUID.randomUUID().toString())
-                .clientId(clientId)
-                .clientSecret(clientName)
-                .clientSecret(clientSecret)
-                .redirectUri(redirectUri)
+                .clientId("test-jwt-client")
+                .clientName("Test JWT Client")
+                .clientSecret("{noop}test-jwt-client")
+                .redirectUri("http://localhost:5173/code")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-//                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-//                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-    //                .scope("client.create")
-    //                .scope("client.read")
-                .clientSettings(ClientSettings
-                    .builder()
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .scopes(scopes -> scopes.addAll(Set.of("client.read", "client.write")))
+                .clientSettings(ClientSettings.builder()
                     .requireAuthorizationConsent(false)
                     .requireProofKey(false)
-                    .build())
+                    .build()
+                )
+                .tokenSettings(TokenSettings.builder()
+                    .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
+                    .accessTokenTimeToLive(Duration.of(30, ChronoUnit.MINUTES))
+                    .refreshTokenTimeToLive(Duration.of(300, ChronoUnit.MINUTES))
+                    .authorizationCodeTimeToLive(Duration.of(30, ChronoUnit.SECONDS))
+                    .reuseRefreshTokens(false)
+                    .build()
+                )
                 .build();
-            clientRepository.save(client);
+            registeredClientService.save(client);
         }
 
-        Optional<User> existUser = userRepository.findByUsername("test_user_1");
+        if (!registeredClientService.isExists("test-jwt-proof-client"))
+        {
+            RegisteredClient client = RegisteredClient
+                .withId(UUID.randomUUID().toString())
+                .clientId("test-jwt-proof-client")
+                .clientName("Test JWT Proof Client")
+                .clientSecret("{noop}test-jwt-proof-client")
+                .redirectUri("http://localhost:5173/code")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .scopes(scopes -> scopes.addAll(Set.of("client.read", "client.write")))
+                .clientSettings(ClientSettings.builder()
+                    .requireAuthorizationConsent(false)
+                    .requireProofKey(true)
+                    .build()
+                )
+                .tokenSettings(TokenSettings.builder()
+                    .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
+                    .accessTokenTimeToLive(Duration.of(30, ChronoUnit.MINUTES))
+                    .refreshTokenTimeToLive(Duration.of(300, ChronoUnit.MINUTES))
+                    .authorizationCodeTimeToLive(Duration.of(30, ChronoUnit.SECONDS))
+                    .reuseRefreshTokens(false)
+                    .build()
+                )
+                .build();
+            registeredClientService.save(client);
+        }
+
+        if (!registeredClientService.isExists("test-opaque-client"))
+        {
+            RegisteredClient client = RegisteredClient
+                .withId(UUID.randomUUID().toString())
+                .clientId("test-opaque-client")
+                .clientName("Test Opaque Client")
+                .clientSecret("{noop}test-opaque-client")
+                .redirectUri("http://localhost:5173/code")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .scopes(scopes -> scopes.addAll(Set.of("client.read", "client.write")))
+                .clientSettings(ClientSettings.builder()
+                    .requireAuthorizationConsent(false)
+                    .requireProofKey(false)
+                    .build()
+                )
+                .tokenSettings(TokenSettings.builder()
+                    .accessTokenFormat(OAuth2TokenFormat.REFERENCE)
+                    .accessTokenTimeToLive(Duration.of(30, ChronoUnit.MINUTES))
+                    .refreshTokenTimeToLive(Duration.of(300, ChronoUnit.MINUTES))
+                    .authorizationCodeTimeToLive(Duration.of(30, ChronoUnit.SECONDS))
+                    .reuseRefreshTokens(false)
+                    .build()
+                )
+                .build();
+            registeredClientService.save(client);
+        }
+
+        if (!registeredClientService.isExists("test-opaque-proof-client"))
+        {
+            RegisteredClient client = RegisteredClient
+                .withId(UUID.randomUUID().toString())
+                .clientId("test-opaque-proof-client")
+                .clientName("Test Opaque Proof Client")
+                .clientSecret("{noop}test-opaque-proof-client")
+                .redirectUri("http://localhost:5173/code")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .scopes(scopes -> scopes.addAll(Set.of("client.read", "client.write")))
+                .clientSettings(ClientSettings.builder()
+                    .requireAuthorizationConsent(false)
+                    .requireProofKey(true)
+                    .build()
+                )
+                .tokenSettings(TokenSettings.builder()
+                    .accessTokenFormat(OAuth2TokenFormat.REFERENCE)
+                    .accessTokenTimeToLive(Duration.of(30, ChronoUnit.MINUTES))
+                    .refreshTokenTimeToLive(Duration.of(300, ChronoUnit.MINUTES))
+                    .authorizationCodeTimeToLive(Duration.of(30, ChronoUnit.SECONDS))
+                    .reuseRefreshTokens(false)
+                    .build()
+                )
+                .build();
+            registeredClientService.save(client);
+        }
+
+        Optional<User> existUser = userService.findByUsername("test_user_1");
         if (existUser.isEmpty())
         {
-            List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(Role.MANAGER.name()), new SimpleGrantedAuthority(Role.ADMIN.name()));
             User user = new User()
                 .setUsername("test_user_1")
                 .setPassword(passwordEncoder.encode("test123"))
@@ -88,7 +175,7 @@ public class ApplicationSeed implements CommandLineRunner
                 .setRoles(Set.of(Role.MANAGER, Role.ADMIN))
                 .setRegistrationDate(Instant.now())
             ;
-            userRepository.save(user);
+            userService.save(user);
         }
     }
 }

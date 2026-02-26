@@ -3,7 +3,6 @@ package com.kiraliza.spring.authenticaion.sso_server.service;
 import com.kiraliza.spring.authenticaion.sso_server.helper.LogHelper;
 import com.kiraliza.spring.authenticaion.sso_server.model.LoggedInUser;
 import com.kiraliza.spring.authenticaion.sso_server.model.User;
-import com.kiraliza.spring.authenticaion.sso_server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,16 +18,14 @@ import java.util.stream.Collectors;
 public class AuthUserDetailsService implements UserDetailsService
 {
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
     {
-        LogHelper.info("======= LOGIN[" + username + "] =======");
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<User> user = userService.findByUsername(username);
         if (user.isEmpty())
         {
-            LogHelper.info("======= NOT FOUND =======");
             throw new UsernameNotFoundException(String.format("Username '%s' not found", username));
         }
 
