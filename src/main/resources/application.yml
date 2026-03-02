@@ -15,7 +15,20 @@ logging:
   level:
     root: warn
     org:
+      hibernate:
+        orm:
+          jdbc:
+            bind: TRACE
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
       springframework:
+        jdbc:
+          core:
+            JdbcTemplate: DEBUG
+            StatementCreatorUtils: TRACE
         security: debug
         data:
           mongodb: debug

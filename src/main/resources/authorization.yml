@@ -11,3 +11,13 @@ spring:
     oauth2:
       authorizationserver:
         issuer-url: http://localhost:8843
+      client:
+        registration:
+          github:
+            client-id: ${SSO_GITHUB_CLIENT_ID}
+            client-secret: ${SSO_GITHUB_CLIENT_SECRET}
+            client-name: KiraLiza SSO Server Github
+          google:
+            client-id: ${SSO_GOOGLE_CLIENT_ID}
+            client-secret: ${SSO_GOOGLE_CLIENT_SECRET}
+            client-name: KiraLiza SSO Server Google

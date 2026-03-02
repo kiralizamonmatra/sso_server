@@ -6,9 +6,7 @@ import com.kiraliza.spring.authenticaion.sso_server.service.RegisteredClientServ
 import com.kiraliza.spring.authenticaion.sso_server.service.UserService;
 import com.kiraliza.spring.authenticaion.sso_server.type.Role;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -27,7 +25,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Component
-@Profile("test")
+//@Profile("test")
 public class ApplicationSeed implements CommandLineRunner
 {
     @Autowired
@@ -49,7 +47,7 @@ public class ApplicationSeed implements CommandLineRunner
                 .withId(UUID.randomUUID().toString())
                 .clientId("test-jwt-client")
                 .clientName("Test JWT Client")
-                .clientSecret("{noop}test-jwt-client")
+                .clientSecret(passwordEncoder.encode("test-jwt-client"))
                 .redirectUri("http://localhost:5173/code")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
@@ -79,7 +77,7 @@ public class ApplicationSeed implements CommandLineRunner
                 .withId(UUID.randomUUID().toString())
                 .clientId("test-jwt-proof-client")
                 .clientName("Test JWT Proof Client")
-                .clientSecret("{noop}test-jwt-proof-client")
+                .clientSecret(passwordEncoder.encode("test-jwt-proof-client"))
                 .redirectUri("http://localhost:5173/code")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
@@ -109,7 +107,7 @@ public class ApplicationSeed implements CommandLineRunner
                 .withId(UUID.randomUUID().toString())
                 .clientId("test-opaque-client")
                 .clientName("Test Opaque Client")
-                .clientSecret("{noop}test-opaque-client")
+                .clientSecret(passwordEncoder.encode("test-opaque-client"))
                 .redirectUri("http://localhost:5173/code")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
@@ -139,7 +137,7 @@ public class ApplicationSeed implements CommandLineRunner
                 .withId(UUID.randomUUID().toString())
                 .clientId("test-opaque-proof-client")
                 .clientName("Test Opaque Proof Client")
-                .clientSecret("{noop}test-opaque-proof-client")
+                .clientSecret(passwordEncoder.encode("test-opaque-proof-client"))
                 .redirectUri("http://localhost:5173/code")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
@@ -174,6 +172,7 @@ public class ApplicationSeed implements CommandLineRunner
                 .setBirthOfDate(Instant.parse("1879-03-14T00:00:00Z"))
                 .setRoles(Set.of(Role.MANAGER, Role.ADMIN))
                 .setRegistrationDate(Instant.now())
+                .setActive(true)
             ;
             userService.save(user);
         }

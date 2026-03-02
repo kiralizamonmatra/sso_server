@@ -1,5 +1,6 @@
 package com.kiraliza.spring.authenticaion.sso_server.controller;
 
+import com.kiraliza.spring.authenticaion.sso_server.helper.LogHelper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,12 +18,15 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException
     {
+        LogHelper.error("==============CustomAuthenticationSuccessHandler::onAuthenticationSuccess 1");
+
         AuthenticationSuccessHandler.super.onAuthenticationSuccess(request, response, chain, authentication);
     }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException
     {
+        LogHelper.error("==============CustomAuthenticationSuccessHandler::onAuthenticationSuccess 2");
 
     }
 }

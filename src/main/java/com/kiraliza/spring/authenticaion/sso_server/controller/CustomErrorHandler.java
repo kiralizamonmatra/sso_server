@@ -25,29 +25,23 @@ public class CustomErrorHandler implements ErrorController
     @GetMapping("/error")
     public String handleError(HttpServletRequest request, Model model, Authentication authentication)
     {
-        LogHelper.error("=================ERROR:::");
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         if (authentication != null)
         {
-            LogHelper.info("==name:" + authentication.getName());
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
             authorities.forEach(a -> LogHelper.info("ROLE:" + a.getAuthority()));
         }
 
         if (status != null)
         {
-            LogHelper.error("=================STATUS:::" + status);
             int statusCode = Integer.parseInt(status.toString());
-            LogHelper.error("=================ERROR_MESSAGE:::" + request.getAttribute(RequestDispatcher.ERROR_MESSAGE));
 
             if (statusCode == HttpStatus.NOT_FOUND.value())
             {
-                LogHelper.error("=================NOT_FOUND");
                 return "error/404";
             }
             else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value())
             {
-                LogHelper.error("=================INTERNAL_SERVER_ERROR");
                 String message = (String) request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
                 Exception exception = (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
                 model.addAttribute("errorMessage", StringUtils.hasText(message) ? message : (exception != null ? exception.getMessage() : ""));
@@ -55,12 +49,10 @@ public class CustomErrorHandler implements ErrorController
             }
             else if (statusCode == HttpStatus.FORBIDDEN.value())
             {
-                LogHelper.error("=================FORBIDDEN");
                 return "error/403";
             }
         }
 
-        LogHelper.error("=================NOT_FOUND");
         return "error/error";
     }
 }

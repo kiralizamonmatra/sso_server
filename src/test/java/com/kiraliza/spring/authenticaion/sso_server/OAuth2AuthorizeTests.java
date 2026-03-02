@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,13 +16,12 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
-@Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -31,22 +31,28 @@ public class OAuth2AuthorizeTests
     private static final String PASSWORD = "test123";
     private static final String USER_ROLE = "MANAGER";
 
+    private static String codeChallenge;
+    private static final String codeVerifier = "someRandomString123456789someRandomString123456789";
+
     @Autowired
     private MockMvc mvc;
 
     @Autowired
     private JwtDecoder jwtDecoder;
 
-    @Test
-    public void oauth2AuthorizeJWTWithoutLoginWithProof() throws Exception
+    @BeforeAll
+    public static void initCodeChallenge() throws NoSuchAlgorithmException
     {
-        String codeVerifier = "someRandomString123456789someRandomString123456789";
-        String codeChallenge = Base64.getUrlEncoder().withoutPadding().encodeToString(
+        codeChallenge = Base64.getUrlEncoder().withoutPadding().encodeToString(
             MessageDigest
                 .getInstance("SHA-256")
                 .digest(codeVerifier.getBytes())
         );
+    }
 
+    @Test
+    public void oauth2AuthorizeJWTWithoutLoginWithProof() throws Exception
+    {
         MockHttpServletResponse response = mvc.perform(get("/oauth2/authorize")
                 .queryParam("response_type", "code")
                 .queryParam("client_id", "test-jwt-proof-client")

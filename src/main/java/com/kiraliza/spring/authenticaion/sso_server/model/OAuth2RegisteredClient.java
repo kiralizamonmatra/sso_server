@@ -2,7 +2,6 @@ package com.kiraliza.spring.authenticaion.sso_server.model;
 
 import jakarta.persistence.*;
 
-import javax.annotation.processing.Generated;
 import java.time.Instant;
 
 @Entity

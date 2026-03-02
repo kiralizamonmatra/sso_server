@@ -1,16 +1,11 @@
 package com.kiraliza.spring.authenticaion.sso_server.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
-import java.util.UUID;
 
 @Service
 public class RegisteredClientService

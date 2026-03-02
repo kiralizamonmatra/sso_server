@@ -8,7 +8,7 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 
 import java.time.Duration;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableCaching
 public class CacheConfig
 {

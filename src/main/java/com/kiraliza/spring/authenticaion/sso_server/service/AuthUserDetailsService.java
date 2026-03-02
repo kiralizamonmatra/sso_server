@@ -1,6 +1,5 @@
 package com.kiraliza.spring.authenticaion.sso_server.service;
 
-import com.kiraliza.spring.authenticaion.sso_server.helper.LogHelper;
 import com.kiraliza.spring.authenticaion.sso_server.model.LoggedInUser;
 import com.kiraliza.spring.authenticaion.sso_server.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class AuthUserDetailsService implements UserDetailsService
         Optional<User> user = userService.findByUsername(username);
         if (user.isEmpty())
         {
-            throw new UsernameNotFoundException(String.format("Username '%s' not found", username));
+            throw new UsernameNotFoundException("Username '%s' not found".formatted(username));
         }
 
         List<SimpleGrantedAuthority> authorities = user.get().getRoles().stream().map(role -> new SimpleGrantedAuthority(role.name())).collect(Collectors.toList());

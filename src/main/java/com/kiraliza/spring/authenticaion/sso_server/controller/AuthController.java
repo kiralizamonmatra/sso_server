@@ -8,16 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class AuthController
 {
-    @GetMapping(Routes.LOGIN)
-    public String login()
-    {
-        LogHelper.info("============ DO LOGIN");
-        return "login";
-    }
-
-//    @PostMapping
+//    @GetMapping(Routes.LOGIN)
 //    public String login()
 //    {
-//        return Routes.LOGIN;
+//        LogHelper.info("============ DO LOGIN");
+//        return "login";
 //    }
 }

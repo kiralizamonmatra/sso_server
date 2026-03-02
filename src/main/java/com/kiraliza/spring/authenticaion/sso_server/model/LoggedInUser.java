@@ -1,9 +1,6 @@
 package com.kiraliza.spring.authenticaion.sso_server.model;
 
 import com.kiraliza.spring.authenticaion.sso_server.type.Role;
-import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;

@@ -4,12 +4,8 @@ import com.kiraliza.spring.authenticaion.sso_server.type.Role;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.jspecify.annotations.Nullable;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.time.Instant;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,6 +21,8 @@ public class User
     private String email;
     private String username;
     private String password;
+    @Column(nullable = false)
+    private boolean active;
     @Column(name = "birt_of_date")
     private Instant birthOfDate;
     @Column(name = "registration_date")
@@ -121,6 +119,17 @@ public class User
     public User setUsername(String username)
     {
         this.username = username;
+        return this;
+    }
+
+    public boolean isActive()
+    {
+        return active;
+    }
+
+    public User setActive(boolean active)
+    {
+        this.active = active;
         return this;
     }
 
